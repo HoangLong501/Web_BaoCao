@@ -67,16 +67,19 @@
     <div class="content row">
         <div class="sidebar col-2 sidebar-edit">
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                <?php
+                include "config.php";
+                $sql = "select * from manufacturer";
+                $stm = $pdh->query($sql);
+                $rows = $stm->fetchAll(PDO::FETCH_NUM);
+                foreach ($rows as $row) {
+                echo "
+                <li class='nav-item'>
+                    <a class='nav-link' href='#'>$row[0]</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                
+                ";
+                }
+                ?>
             </ul>
         </div>
 
