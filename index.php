@@ -27,7 +27,7 @@
     <div class="header">
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid">
-            <a class="navbar-brand">Drink Store</a>
+            <a href="index.php" class="navbar-brand">Drink Store</a>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>   
@@ -72,13 +72,20 @@
                 $sql = "select * from manufacturer";
                 $stm = $pdh->query($sql);
                 $rows = $stm->fetchAll(PDO::FETCH_NUM);
-                foreach ($rows as $row) {
+                foreach ($rows as &$row) {
+               
                 echo "
                 <li class='nav-item'>
-                    <a class='nav-link' href='#'>$row[0]</a>
+                    <form method='GET' action='search_sidebar.php'>
+                    <input type='' name='sidebar' value='$row[0]' style='display:none' >
+                    <button type='submit' class='nav-link' >$row[1]</button>
+                    </form>
                 </li>
                 ";
                 }
+                
+                
+
                 ?>
             </ul>
         </div>
@@ -118,7 +125,19 @@
     </div>
 
     
+<?php
+    include "config.php";
+    $temp=$_GET['sidebar'];
+    $sql = "select $value_get from manufacturer";
+    $stm = $pdh->query($sql);
+    $rows2 = $stm->fetchAll(PDO::FETCH_NUM);
+    echo $rows2[0];
+    // foreach ($rows2 as $row1) {
+    // echo "
+    // $row1[0]
+    // ";
 
+?>
 
     
 </body>
