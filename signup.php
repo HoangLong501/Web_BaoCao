@@ -13,6 +13,7 @@
         return false;
     }
 </script>
+
 <body>
 <section class="vh-100" style="background-color: #eee;">
   <div class="container h-100">
@@ -25,7 +26,7 @@
 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                <form class="mx-1 mx-md-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" onsubmit="return disableReload()">
+                <form  class="mx-1 mx-md-4 form" action="signin.php" method="POST"  >
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
@@ -88,25 +89,43 @@
 </section>
 
 <?php
-    include "config.php";
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user = $_POST["name"];
-    $pass = $_POST["password"];
+          include "config.php";
+         
+            $user = $_POST["name"];
+            $pass = $_POST["password"];
+        
+            $sql = "select * from user where user_name='$user' ";
+            $stm = $pdh->query($sql);
+            $rows = $stm->fetchAll(PDO::FETCH_NUM);
+           if(sizeof($rows)>0){
+              echo" 
+              <script>
+              var form=document.querySelector('.form');
+              form.addEventListener('submit',function(e){
+                  e.preventDefault()
+              })
+            
+              </script>
+              ";
+           }else{
+            
 
-    $sql = "select * from user where user_name='$user' ";
-    $stm = $pdh->query($sql);
-    $rows = $stm->fetchAll(PDO::FETCH_NUM);
-    echo sizeof($rows);
-    if(sizeof($rows)){
-      echo "Tai khoan da ton tai";
-    }else{
-      header("Location: index.php");
-      exit();
-    }
+           }
+           
+            
+          
+      ?>
+<?php
+    include "config.php";
+  
                     
-}
+
 ?>
 </body>
-
+<!-- <script>
+   alert("Tai khoản đã tồn tại");
+   var form=document.querySelector('.form');
+   form.setAttribute(onsubmit,'return disableReload()');
+</script> -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </html>

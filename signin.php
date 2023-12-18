@@ -36,6 +36,24 @@ height: 100%;
     </a>
   </div>
 </nav>
+
+
+<?php
+    // include "config.php";
+    // if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //   $user = $_POST["name"];
+    //   $pass = $_POST["password"];
+  
+    //   $sql = "select * from user where user_name='$user' and user_password='$pass' ";
+    //   $stm = $pdh->query($sql);
+    //   $rows = $stm->fetchAll(PDO::FETCH_NUM);
+    //   echo sizeof($rows);
+     
+      
+    // }
+                    
+
+?>
 </header>
 
 <section class="vh-100">
@@ -46,7 +64,7 @@ height: 100%;
           class="img-fluid img-login" alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" >
+        <form action="index.php" method="POST" >
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <p class="lead fw-normal mb-0 me-3">Sign in with</p>
             <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -76,7 +94,7 @@ height: 100%;
           <!-- Password input -->
           <div class="form-outline mb-3">
             <input type="password" id="form3Example4" class="form-control form-control-lg"
-              placeholder="Enter password" required />
+              placeholder="Enter password" name="password" required />
             <label class="form-label" for="form3Example4">Password</label>
           </div>
 
@@ -134,7 +152,7 @@ height: 100%;
 </section>   
 
 
-    
+    <!-- <script src="kiemtraFORM.js"></script> -->
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 

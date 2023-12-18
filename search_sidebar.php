@@ -28,7 +28,7 @@
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid">
             <a href="index.php" class="navbar-brand">Drink Store</a>
-            <form class="d-flex" role="search">
+            <form class="d-flex search_index" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>   
             </form>
@@ -43,6 +43,8 @@
                     <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
 
                 </div>
+                
+                    
                     ";
                     
                 }else{

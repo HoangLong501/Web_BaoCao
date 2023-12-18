@@ -24,37 +24,45 @@
 </style>
 
 <body>
-    <div class="header">
-        <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid">
-            <a href="index.php" class="navbar-brand">Drink Store</a>
-            <form class="d-flex" role="search">
+    <div class="header ">
+        <nav class="navbar bg-body-tertiary ">
+            <div class="container-fluid row">
+            <div class="home col"><a href="index.php" class="navbar-brand ">Drink Store</a></div>
+            
+            <form class="d-flex col-6" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>   
             </form>
-
+            <div class="task row col-4">
             <?php
                 error_reporting(0);
                 $checked=$_POST['signed'];
                 if(!$checked){
                    
                     echo "
-                    <div class='signin'>
+                    <div class='signin col'>
                     <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
 
                 </div>
+                
                     ";
                     
                 }else{
                     echo "
-                    <div class='signup'>
+                    
+                    <div class='signin col'>
+                    <a href='cart.php' class='btn btn-outline-success btnDangNhap' >Giỏ hàng</a>
+                    </div>
+                    
+                    <div class='signup col'>
                     <a href='index.php' class='btn btn-outline-success btnDangNhap' >Đăng xuất</a>
-
-                </div>
+                    </div>
                     ";
                     
                 }
             ?>
+            </div>
+            
                     
             
             </div>
