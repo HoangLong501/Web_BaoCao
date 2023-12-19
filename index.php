@@ -6,7 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/nova-square" rel="stylesheet">
-                
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>           
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <style>
@@ -22,7 +22,22 @@
 
 
 </style>
-
+<script>
+        function submitForm(id) {
+            // Lấy dữ liệu từ biểu mẫu
+            var formData = $(".formCart").serialize();
+            formData += "&drinkID=" + id;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "ControlOrder.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    alert(respone); // Hiển thị kết quả từ server
+                }
+            });
+        }
+    </script>
 <body>
     <div class="header ">
         <nav class="navbar bg-body-tertiary ">
@@ -70,7 +85,7 @@
 
     </div>
 
-
+    
 
     <div class="content row">
         <div class="sidebar col-2 sidebar-edit">
@@ -108,23 +123,33 @@
                     include "config.php";
                     $sql = "select * from drink ";
                     $stm = $pdh->query($sql);
-                    $rows3 = $stm->fetchAll(PDO::FETCH_NUM);
-                    foreach($rows3 as $row)
+                    $rows = $stm->fetchAll(PDO::FETCH_OBJ);
+                    foreach($rows as $row)
                     {
+                        $title=$row->drink_name;
+                        $id=$row->drink_id;
+                        $price=$row->price;
+                        
                         echo "
                         <div class='card col-3' style='width: 18rem;'>
-                            <img src='./img_product/$row[4]' class='card-img-top' alt='...'>
+                            <form class='formCart'   >
+                                <img src='./img_product/$row->img' class='card-img-top' alt='...'>
                                 <div class='card-body'>
-                                    <h5 class='card-title'>$row[1]</h5>
-                                    <p class='card-text'>Giá bán $row[2]$</p>
-                                    <a href='#' class='btn btn-primary'>Thêm vào giỏ hàng</a>
+                                    <h5 class='card-title'>$title</h5>
+                                    <p class='card-text'>Giá bán $price $</p>
+                                    <button type='button' onclick='submitForm($id)'class='btn btn-primary' >Thêm vào giỏ hàng</button>
+                                    
                                 </div>
+                            </form>
                         </div>
                         ";  
                     }
-
+                   
                 ?>
+
+
             </div>
+
         </div>
         <div class="product-bestseller"></div>
         <div class="product-1"></div>
@@ -133,22 +158,10 @@
     </div>
 
     
-<?php
-    include "config.php";
-    $temp=$_GET['sidebar'];
-    $sql = "select $value_get from manufacturer";
-    $stm = $pdh->query($sql);
-    $rows2 = $stm->fetchAll(PDO::FETCH_NUM);
-    echo $rows2[0];
-    // foreach ($rows2 as $row1) {
-    // echo "
-    // $row1[0]
-    // ";
-
-?>
-
     
 </body>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="scripts.js"></script>
 </html>
