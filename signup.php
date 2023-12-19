@@ -26,7 +26,7 @@
 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                <form  class="mx-1 mx-md-4 form" action="signin.php" method="POST"  >
+                <form  class="mx-1 mx-md-4 form" action="" method="POST"  >
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
@@ -39,7 +39,7 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <input type="tel" id="phone" name="phone" required class="form-control" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"/>
+                        <input type="tel" id="phone" name="phone" required class="form-control" pattern="[0-9]{10}"/>
                         <label class="form-label" for="phone">Your Phone</label>
                     </div>
                   </div>
@@ -68,7 +68,7 @@
                   </div>
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <input  type="submit" class="btn btn-primary btn-lg" value="Register" />
+                    <input  type="submit" class="btn btn-primary btn-lg" value="Register" name="btnregister"/>
                   </div>
 
                 </form>
@@ -89,38 +89,38 @@
 </section>
 
 <?php
-          include "config.php";
-         
-            $user = $_POST["name"];
-            $pass = $_POST["password"];
-        
-            $sql = "select * from user where user_name='$user' ";
-            $stm = $pdh->query($sql);
-            $rows = $stm->fetchAll(PDO::FETCH_NUM);
-           if(sizeof($rows)>0){
-              echo" 
-              <script>
-              var form=document.querySelector('.form');
-              form.addEventListener('submit',function(e){
-                  e.preventDefault()
-              })
-            
-              </script>
-              ";
-           }else{
-            
+include "config.php";
 
-           }
-           
-            
-          
-      ?>
-<?php
-    include "config.php";
-  
-                    
+if (isset($_POST["btnregister"])) {
+    $user_name = $_POST["name"];
+    $password = $_POST["password"];
+    
+    $user_id = uniqid('user_'); //tự tạo id
 
+    // Kiểm tra xem tên người dùng đã tồn tại trong cơ sở dữ liệu hay chưa
+    $sql_check = "SELECT * FROM user WHERE user_name = '$user_name'";
+    $stmt_check = $pdh->query($sql_check);
+    $rows = $stmt_check->fetchAll(PDO::FETCH_NUM);
+
+    if (sizeof($rows) > 0) {
+        echo "<script>alert('Tên người dùng đã tồn tại');</script>";
+    } else {
+        // Nếu tên người dùng chưa tồn tại, thực hiện thêm vào cơ sở dữ liệu
+        $sql_insert = "INSERT INTO user (user_id, user_name, password) VALUES ('$user_id', '$user_name', '$password')";
+        $stmt_insert = $pdh->prepare($sql_insert);
+        if ($stmt_insert->execute()) {
+            echo "<script>alert('Đăng ký thành công');</script>";
+            // Chuyển hướng người dùng đến trang đăng nhập hoặc trang khác sau khi đăng ký thành công
+            // header("Location: login.php");
+            // exit();
+        } else {
+            echo "<script>alert('Đã xảy ra lỗi khi đăng ký');</script>";
+        }
+    }
+}
 ?>
+
+
 </body>
 <!-- <script>
    alert("Tai khoản đã tồn tại");
