@@ -30,7 +30,7 @@
             // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
             $.ajax({
                 type: "POST",
-                url: "ControlOrder.php", // Tên tệp xử lý PHP
+                url: "addCart.php", // Tên tệp xử lý PHP
                 data: formData,
                 success: function(respone) {
                     alert(respone); // Hiển thị kết quả từ server

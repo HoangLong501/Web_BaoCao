@@ -6,7 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/nova-square" rel="stylesheet">
-                
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>                 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <style>
@@ -22,7 +22,25 @@
 
 
 </style>
-
+<script>
+        function submitRemoveCart(id) {
+            // Lấy dữ liệu từ biểu mẫu
+           
+            var formData = $(".form").serialize();
+          
+            formData += "&removeID=" + id;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP            
+            $.ajax({
+                type: "POST",
+                url: "removeCart.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    alert(respone); // Hiển thị kết quả từ server
+                    location.reload();
+                }
+            });
+        }
+    </script>
 <body>
 <?php
 
@@ -86,7 +104,7 @@
 
         <?php
                     include "config.php";
-                    $sql = "SELECT d.drink_name, d.img, od.quantity, d.price , 
+                    $sql = "SELECT d.drink_id, d.drink_name, d.img, od.quantity, d.price , 
                     od.quantity*d.price as total FROM drink d JOIN order_detail od ON d.drink_id = od.drink_id;";
                     $stm = $pdh->query($sql);
                     $rows = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -94,7 +112,7 @@
                     echo "<p><span class='h4'>Shopping Cart </span><span class='h4'>($count item in your cart)</span></p>";
                     foreach($rows as $row)
                     {
-                        
+                        $id=$row->drink_id;
                         echo "
                         
                         <div class='card mb-4'>
@@ -129,6 +147,15 @@
                   <p class='lead fw-normal mb-0'>$row->total</p>
                 </div>
               </div>
+              <div class='col-md-2 d-flex justify-content-center'>
+                <div>
+                    <form class='form'>
+                        <button type='button' onclick='submitRemoveCart($id)'class='btn'><i class='fa-regular fa-trash-can'></i></button>
+                        </div>
+                    </form>
+                    
+                </div>
+              
             </div>
 
           </div>
@@ -182,8 +209,7 @@
         </div>
 
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-light btn-lg me-2">Continue shopping</button>
-          <button type="button" class="btn btn-primary btn-lg">Add to cart</button>
+          <button type="button" class="btn btn-primary btn-lg">THANH TOÁN</button>
         </div>
 
       </div>
