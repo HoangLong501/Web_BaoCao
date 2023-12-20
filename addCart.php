@@ -2,6 +2,7 @@
     // Kiểm tra xem có dữ liệu được gửi từ biểu mẫu không
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Nhận dữ liệu từ biểu mẫu
+
     session_start();
     if (isset($_SESSION['user_id'])) {
         $user_id=$_SESSION['user_id'];
@@ -28,10 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      }else {
         echo "Vui lòng đăng nhập!";
      }
+
 } else {
     echo "Lỗi kết nối đến server";
 }
  
-
-
 ?>

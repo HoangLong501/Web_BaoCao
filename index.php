@@ -22,6 +22,7 @@
         margin-left: 12px;
     }
 </style>
+
 <script>
     function submitForm(id) {
         // Lấy dữ liệu từ biểu mẫu
@@ -55,6 +56,12 @@
             });
         }
 </script>
+
+
+
+
+
+
 
 <body>
     <div class="header ">
@@ -114,9 +121,12 @@
                 $stm = $pdh->query($sql);
                 $rows12 = $stm->fetchAll(PDO::FETCH_OBJ);
                 foreach ($rows12 as $row4) {
+
                 $idSB=$row4->manu_id;
                
                 echo "
+
+
                 <li class='nav-item'>
                     <form class='navForm'>
                     <input name='testID' id='navIP' type='hidden' value='$idSB'>
@@ -156,8 +166,7 @@
                                 <div class='card-body'>
                                     <h5 class='card-title'>$title</h5>
                                     <p class='card-text'>Giá bán $price $</p>
-                                    <button type='button' onclick='submitForm($id)'class='btn btn-primary' >Thêm vào giỏ hàng</button>
-                                    
+                                    <button type='button' onclick='submitForm($id)'class='btn btn-primary btnNav' >Thêm vào giỏ hàng</button>
                                 </div>
                             </form>
                         </div>
