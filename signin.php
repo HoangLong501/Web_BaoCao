@@ -39,21 +39,36 @@ height: 100%;
 
 
 <?php
-    // include "config.php";
-    // if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //   $user = $_POST["name"];
-    //   $pass = $_POST["password"];
-  
-    //   $sql = "select * from user where user_name='$user' and user_password='$pass' ";
-    //   $stm = $pdh->query($sql);
-    //   $rows = $stm->fetchAll(PDO::FETCH_NUM);
-    //   echo sizeof($rows);
-     
-      
-    // }
-                    
+include "config.php"; 
+session_start();
+//nếu đã đăng nhập -> trang index
+if(isset($_SESSION['user'])){ 
+  header("Location: index.php");
+  exit();
+}
 
+if(isset($_POST['btnLogin'])) {
+    $username = $_POST['name'];
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM user WHERE user_name = :username AND password = :password";
+    $stmt = $pdh->prepare($sql);
+    $stmt->execute(['username' => $username, 'password' => $password]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        echo "<script>alert('Đăng nhập thành công.');</script>";
+        $_SESSION['user']=$username; //nếu đăng nhập thành công -> lưu user trong session
+        header("Location: index.php");
+        exit();
+    } else {
+        echo "<script>alert('Sai thông tin');</script>";
+    }
+}
 ?>
+
+
+
 </header>
 
 <section class="vh-100">
@@ -64,7 +79,7 @@ height: 100%;
           class="img-fluid img-login" alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form action="index.php" method="POST" >
+        <form action="" method="POST" >
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <p class="lead fw-normal mb-0 me-3">Sign in with</p>
             <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -110,17 +125,15 @@ height: 100%;
           </div>
 
           <div class="text-center text-lg-start mt-4 pt-2">
-            <input type="submit" class="btn btn-primary btn-lg" value="Login" >
-            <!-- <a href="homepage.php" type="submit" class="btn btn-primary btn-lg"
+            <input type="submit" class="btn btn-primary btn-lg" value="Login" name="btnLogin">
+            <!-- <a href="homepage.php" type="submit" class="btn btn-primary btn-lg"s
               style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</a> -->
             <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="signup.php"
                 class="link-danger">Register</a></p>
           </div>
           <input type="" name="signed" value="1" style="display:none" >
 
-
         </form>
-        
       </div>
     </div>
   </div>
