@@ -34,9 +34,26 @@
             data: formData,
             success: function(respone) {
                 alert(respone); // Hiển thị kết quả từ server
+                
             }
         });
     }
+
+    function navForm(id) {
+            // Lấy dữ liệu từ biểu mẫu
+           
+            let formData = $(".formCart").serialize();
+            formData += "&drinkNavID=" + id;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "search_sidebar.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    document.getElementById("product").innerHTML = respone;// Hiển thị kết quả từ server
+                }
+            });
+        }
 </script>
 
 <body>
@@ -54,7 +71,8 @@
                     error_reporting(0);
 
                     session_start();
-                    if (!isset($_SESSION['user'])) { //nếu chưa đăng nhập -> hiện nút đăng nhập
+                    if (!isset($_SESSION['user_id'])) { //nếu chưa đăng nhập -> hiện nút đăng nhập
+                        echo $_SESSION['user_id'];  
                         echo "
                     <div class='signin col'>
                     <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
@@ -63,6 +81,7 @@
                 
                     ";
                     } else {//nếu dã đăng nhập -> hiện nút giỏ hàng và đăng xuất
+                        echo $_SESSION['user_id'];  
                         echo "
                     
                     <div class='signin col'>
@@ -93,20 +112,21 @@
                 include "config.php";
                 $sql = "select * from manufacturer";
                 $stm = $pdh->query($sql);
-                $rows = $stm->fetchAll(PDO::FETCH_NUM);
-                foreach ($rows as &$row) {
-
-                    echo "
+                $rows12 = $stm->fetchAll(PDO::FETCH_OBJ);
+                foreach ($rows12 as $row4) {
+                $idSB=$row4->manu_id;
+               
+                echo "
                 <li class='nav-item'>
-                    <form method='GET' action='search_sidebar.php'>
-                    <input type='' name='sidebar' value='$row[0]' style='display:none' >
-                    <button type='submit' class='nav-link' >$row[1]</button>
+                    <form class='navForm'>
+                    <input name='testID' id='navIP' type='hidden' value='$idSB'>
+                    <button type='button'onclick='navForm(\"$idSB\")' id='btnNav' class='nav-link ' >$row4->manu_name</button>
                     </form>
                 </li>
                 ";
                 }
-
-
+                
+                
 
                 ?>
             </ul>
@@ -117,9 +137,10 @@
                 <span>SALE 12/12</span>
             </div>
 
-            <div class="product row">
+            <div id="product" class="product row">
                 <?php
                 include "config.php";
+                session_start();
                 $sql = "select * from drink ";
                 $stm = $pdh->query($sql);
                 $rows = $stm->fetchAll(PDO::FETCH_OBJ);

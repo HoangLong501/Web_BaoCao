@@ -42,7 +42,7 @@ height: 100%;
 include "config.php"; 
 session_start();
 //nếu đã đăng nhập -> trang index
-if(isset($_SESSION['user'])){ 
+if(isset($_SESSION['user_id'])){ 
   header("Location: index.php");
   exit();
 }
@@ -54,16 +54,19 @@ if(isset($_POST['btnLogin'])) {
     $sql = "SELECT * FROM user WHERE user_name = :username AND password = :password";
     $stmt = $pdh->prepare($sql);
     $stmt->execute(['username' => $username, 'password' => $password]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    $user = $stmt->fetch(PDO::FETCH_NUM);
+    
     if ($user) {
         echo "<script>alert('Đăng nhập thành công.');</script>";
-        $_SESSION['user']=$username; //nếu đăng nhập thành công -> lưu user trong session
+        $_SESSION['user_id']=$user[0];
+        $idtemp=$_SESSION['user_id']; //nếu đăng nhập thành công -> lưu user trong session
+        echo "<script>alert('$idtemp');</script>";
         header("Location: index.php");
         exit();
     } else {
         echo "<script>alert('Sai thông tin');</script>";
     }
+    $stmt->closeCursor();
 }
 ?>
 

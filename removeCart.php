@@ -20,6 +20,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Phản hồi về trang gửi yêu cầu Ajax
 } else {
     // Nếu không phải là yêu cầu POST, có thể thực hiện các xử lý khác ở đây (nếu cần)
-    echo"Loi    ";
+    echo"Đã gặp lỗi khi đang xóa";
 }
 ?>

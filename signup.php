@@ -7,12 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
-<script>
-    // Function để disable reload page
-    function disableReload() {
-        return false;
-    }
-</script>
+
 
 <body>
 <section class="vh-100" style="background-color: #eee;">
@@ -39,7 +34,7 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <input type="tel" id="phone" name="phone" required class="form-control" pattern="[0-9]{10}"/>
+                        <input type="tel" id="phone" name="phone" required class="form-control" />
                         <label class="form-label" for="phone">Your Phone</label>
                     </div>
                   </div>
@@ -107,15 +102,20 @@ if (isset($_POST["btnregister"])) {
     } else {
         // Nếu tên người dùng chưa tồn tại, thực hiện thêm vào cơ sở dữ liệu
         $sql_insert = "INSERT INTO user (user_id, user_name, password) VALUES ('$user_id', '$user_name', '$password')";
+        
         $stmt_insert = $pdh->prepare($sql_insert);
         if ($stmt_insert->execute()) {
             echo "<script>alert('Đăng ký thành công');</script>";
             // Chuyển hướng người dùng đến trang đăng nhập hoặc trang khác sau khi đăng ký thành công
             // header("Location: login.php");
             // exit();
+            $sql="INSERT INTO `order_product`(`order_id`, `user_id`) VALUES ('OD$user_id.','$user_id')";
+            $stm= $pdh->query($sql);
+            
         } else {
             echo "<script>alert('Đã xảy ra lỗi khi đăng ký');</script>";
         }
+        $stmt->closeCursor();
     }
 }
 ?>
