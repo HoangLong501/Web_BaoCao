@@ -22,22 +22,7 @@
 
 
 </style>
-<script>
-        function submitForm(id) {
-            // Lấy dữ liệu từ biểu mẫu
-            var formData = $(".formCart").serialize();
-            formData += "&drinkID=" + id;
-            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
-            $.ajax({
-                type: "POST",
-                url: "addCart.php", // Tên tệp xử lý PHP
-                data: formData,
-                success: function(respone) {
-                    alert(respone); // Hiển thị kết quả từ server
-                }
-            });
-        }
-    </script>
+
 <body>
     <div class="header ">
         <nav class="navbar bg-body-tertiary ">
@@ -94,14 +79,15 @@
                 include "config.php";
                 $sql = "select * from manufacturer";
                 $stm = $pdh->query($sql);
-                $rows = $stm->fetchAll(PDO::FETCH_NUM);
-                foreach ($rows as &$row) {
+                $rows12 = $stm->fetchAll(PDO::FETCH_OBJ);
+                foreach ($rows12 as $row4) {
+                $idSB=$row4->manu_id;
                
                 echo "
                 <li class='nav-item'>
-                    <form method='GET' action='search_sidebar.php'>
-                    <input type='' name='sidebar' value='$row[0]' style='display:none' >
-                    <button type='submit' class='nav-link' >$row[1]</button>
+                    <form class='navForm'>
+                    <input name='testID' id='navIP' type='hidden' value='$idSB'>
+                    <button type='button'onclick='navForm(\"$idSB\")' id='btnNav' class='nav-link ' >$row4->manu_name</button>
                     </form>
                 </li>
                 ";
@@ -118,7 +104,7 @@
             <span>SALE 12/12</span> 
             </div>
 
-            <div class="product row">
+            <div id="product" class="product row">
                 <?php
                     include "config.php";
                     $sql = "select * from drink ";
@@ -137,8 +123,7 @@
                                 <div class='card-body'>
                                     <h5 class='card-title'>$title</h5>
                                     <p class='card-text'>Giá bán $price $</p>
-                                    <button type='button' onclick='submitForm($id)'class='btn btn-primary' >Thêm vào giỏ hàng</button>
-                                    
+                                    <button type='button' onclick='submitForm($id)'class='btn btn-primary btnNav' >Thêm vào giỏ hàng</button>
                                 </div>
                             </form>
                         </div>
@@ -160,7 +145,38 @@
     
     
 </body>
+<script>
+     function navForm(id) {
+            // Lấy dữ liệu từ biểu mẫu
+           
+            let formData = $(".formCart").serialize();
+            formData += "&drinkNavID=" + id;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "search_sidebar.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    document.getElementById("product").innerHTML = respone;// Hiển thị kết quả từ server
+                }
+            });
+        }
 
+        function submitForm(id) {
+            // Lấy dữ liệu từ biểu mẫu
+            let formData = $(".formCart").serialize();
+            formData += "&drinkID=" + id;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "addCart.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    alert(respone); // Hiển thị kết quả từ server
+                }
+            });
+        }
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="scripts.js"></script>

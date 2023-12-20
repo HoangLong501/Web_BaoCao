@@ -14,11 +14,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(sizeof($rows)>0){
         $sql ="UPDATE `order_detail` SET `quantity`=`quantity`+1 WHERE drink_id=$drinkID";
         $stm = $pdh->query($sql);
-        echo "Cập nhật thành công";
+        echo "Cập nhật thành công $drinkID";
     }else{
         $sql = "INSERT INTO `order_detail`(`order_id`, `drink_id`, `quantity`) VALUES ('OD1','$drinkID',1)";
         $stm = $pdh->query($sql);
-        echo "Thêm thành công";
+        echo "Thêm thành công $drinkID";
     }
     // Phản hồi về trang gửi yêu cầu Ajax
 } else {
