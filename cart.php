@@ -55,30 +55,7 @@
             <a href="index.php" class="navbar-brand">Drink Store</a>
             
 
-            <?php
-                error_reporting(0);
-                $checked=$_POST['signed'];
-                if(!$checked){
-                    echo "
-                    <div class='signup'>
-                    <a href='index.php' class='btn btn-outline-success btnDangNhap' >Đăng xuất</a>
-
-                </div>
-                    ";
-                    
-                    
-                }else{
-                    
-                    echo "
-                    <div class='signin'>
-                    <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
-
-                </div>
-                
-                    
-                    ";
-                }
-            ?>
+          
                     
             
             </div>
@@ -104,8 +81,17 @@
 
         <?php
                     include "config.php";
+                    session_start();
+                    $user_id=$_SESSION['user_id'];
+                    $sql1="SELECT * FROM `order_product` WHERE user_id='$user_id'";
+                    $stm = $pdh->query($sql1);
+                    $rows = $stm->fetchAll(PDO::FETCH_NUM);
+                    $orderArr=$rows[0][0];
+                    $stm->closeCursor();
+                    
+
                     $sql = "SELECT d.drink_id, d.drink_name, d.img, od.quantity, d.price , 
-                    od.quantity*d.price as total FROM drink d JOIN order_detail od ON d.drink_id = od.drink_id;";
+                    od.quantity*d.price as total FROM drink d JOIN order_detail od ON d.drink_id = od.drink_id where od.order_id='$orderArr';";
                     $stm = $pdh->query($sql);
                     $rows = $stm->fetchAll(PDO::FETCH_OBJ);
                     $count=sizeof($rows);
@@ -166,19 +152,6 @@
                         ";  
                     }
                 ?>
-
-
-
-        
-
-        
-
-
-
-
-
-
-
         <div class="card mb-5">
           <div class="card-body p-4">
                 <?php
@@ -188,7 +161,7 @@
                 FROM 
                     drink d
                 JOIN 
-                    order_detail od ON d.drink_id = od.drink_id;";
+                    order_detail od ON d.drink_id = od.drink_id where od.order_id='$orderArr' ;";
                     $stm = $pdh->query($sql);
                     $rows = $stm->fetchAll(PDO::FETCH_OBJ);
                     

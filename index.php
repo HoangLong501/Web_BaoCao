@@ -23,6 +23,42 @@
     }
 </style>
 
+<script>
+    function submitForm(id) {
+        // Lấy dữ liệu từ biểu mẫu
+        var formData = $(".formCart").serialize();
+        formData += "&drinkID=" + id;
+        // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+        $.ajax({
+            type: "POST",
+            url: "addCart.php", // Tên tệp xử lý PHP
+            data: formData,
+            success: function(respone) {
+                alert(respone); // Hiển thị kết quả từ server
+                
+            }
+        });
+    }
+
+    function navForm(id) {
+            // Lấy dữ liệu từ biểu mẫu
+           
+            let formData = $(".formCart").serialize();
+            formData += "&drinkNavID=" + id;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "search_sidebar.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    document.getElementById("product").innerHTML = respone;// Hiển thị kết quả từ server
+                }
+            });
+        }
+</script>
+
+
+
 
 
 
@@ -42,7 +78,8 @@
                     error_reporting(0);
 
                     session_start();
-                    if (!isset($_SESSION['user'])) { //nếu chưa đăng nhập -> hiện nút đăng nhập
+                    if (!isset($_SESSION['user_id'])) { //nếu chưa đăng nhập -> hiện nút đăng nhập
+                        echo $_SESSION['user_id'];  
                         echo "
                     <div class='signin col'>
                     <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
@@ -51,6 +88,7 @@
                 
                     ";
                     } else {//nếu dã đăng nhập -> hiện nút giỏ hàng và đăng xuất
+                        echo $_SESSION['user_id'];  
                         echo "
                     
                     <div class='signin col'>
@@ -83,12 +121,12 @@
                 $stm = $pdh->query($sql);
                 $rows12 = $stm->fetchAll(PDO::FETCH_OBJ);
                 foreach ($rows12 as $row4) {
-                $idSB=$row4->manu_id;    
-                echo "
-                $rows = $stm->fetchAll(PDO::FETCH_NUM);
-                foreach ($rows as &$row) {
 
-                    echo "
+                $idSB=$row4->manu_id;
+               
+                echo "
+
+
                 <li class='nav-item'>
                     <form class='navForm'>
                     <input name='testID' id='navIP' type='hidden' value='$idSB'>
@@ -97,8 +135,8 @@
                 </li>
                 ";
                 }
-
-
+                
+                
 
                 ?>
             </ul>
@@ -112,6 +150,7 @@
             <div id="product" class="product row">
                 <?php
                 include "config.php";
+                session_start();
                 $sql = "select * from drink ";
                 $stm = $pdh->query($sql);
                 $rows = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -149,38 +188,7 @@
 
 
 </body>
-<script>
-     function navForm(id) {
-            // Lấy dữ liệu từ biểu mẫu
-           
-            let formData = $(".formCart").serialize();
-            formData += "&drinkNavID=" + id;
-            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
-            $.ajax({
-                type: "POST",
-                url: "search_sidebar.php", // Tên tệp xử lý PHP
-                data: formData,
-                success: function(respone) {
-                    document.getElementById("product").innerHTML = respone;// Hiển thị kết quả từ server
-                }
-            });
-        }
 
-        function submitForm(id) {
-            // Lấy dữ liệu từ biểu mẫu
-            let formData = $(".formCart").serialize();
-            formData += "&drinkID=" + id;
-            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
-            $.ajax({
-                type: "POST",
-                url: "addCart.php", // Tên tệp xử lý PHP
-                data: formData,
-                success: function(respone) {
-                    alert(respone); // Hiển thị kết quả từ server
-                }
-            });
-        }
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="scripts.js"></script>

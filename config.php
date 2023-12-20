@@ -4,7 +4,7 @@
 $servername = "localhost"; // Thay thế bằng tên máy chủ CSDL của bạn
 $username = "root"; // Thay thế bằng tên người dùng CSDL của bạn
 $password = ""; // Thay thế bằng mật khẩu CSDL của bạn
-$dbname = "drinkstore"; // Thay thế bằng tên CSDL của bạn
+$dbname = "drinkstore1"; // Thay thế bằng tên CSDL của bạn
 
 // Tạo kết nối
 // $conn = new BDO($servername, $username, $password, $dbname);
