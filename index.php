@@ -117,6 +117,7 @@ select {
                 }
             });
         }
+        
      
 
 </script>
@@ -127,9 +128,9 @@ select {
             <div class="container-fluid row">
                 <div class="home col"><a href="index.php" class="navbar-brand ">Drink Store</a></div>
               
-                <form class="d-flex col-6" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                <form class="d-flex col-6 formSearch" >
+                    <input class="form-control me-2 textSearch" type="search" placeholder="Search" aria-label="Search">
+                    <button type='button' class="btn btn-outline-success" onclick="searchForm()" >Search</button>
                 </form>
                 <div class="task row col-4">
                     <?php
@@ -376,6 +377,23 @@ select {
             modal.style.display = 'none';
         }
     };
+
+    function searchForm() {
+            // Lấy dữ liệu từ biểu mẫu
+           
+            var textSearch =document.querySelector('.textSearch').value;
+            let formData = $(".formSearch").serialize();
+            formData += "&textSearch=" + textSearch;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "search.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    document.getElementById("product").innerHTML = respone;// Hiển thị kết quả từ server
+                }
+            });
+        }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
