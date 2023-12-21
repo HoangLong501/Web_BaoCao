@@ -50,8 +50,8 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" id="form3Example4cd" class="form-control" required />
-                      <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                      <input name="address" type="text" id="form3Example4cd" class="form-control" required />
+                      <label class="form-label" for="form3Example4cd">Address</label>
                     </div>
                   </div>
 
@@ -89,7 +89,8 @@ include "config.php";
 if (isset($_POST["btnregister"])) {
     $user_name = $_POST["name"];
     $password = $_POST["password"];
-    
+    $phone =$_POST["phone"];
+    $address=$_POST["address"];
     $user_id = uniqid('user_'); //tự tạo id
 
     // Kiểm tra xem tên người dùng đã tồn tại trong cơ sở dữ liệu hay chưa
@@ -102,15 +103,19 @@ if (isset($_POST["btnregister"])) {
     } else {
         // Nếu tên người dùng chưa tồn tại, thực hiện thêm vào cơ sở dữ liệu
         $sql_insert = "INSERT INTO user (user_id, user_name, password) VALUES ('$user_id', '$user_name', '$password')";
+
+        $sql_insert = "INSERT INTO `user`(`user_id`, `user_name`, `is_admin`, `password`, `phone`, `address`)
+        VALUES ('$user_id','$user_name',0,'$password','$phone','$address')";
         
         $stmt_insert = $pdh->prepare($sql_insert);
         if ($stmt_insert->execute()) {
             echo "<script>alert('Đăng ký thành công');</script>";
             // Chuyển hướng người dùng đến trang đăng nhập hoặc trang khác sau khi đăng ký thành công
-            // header("Location: login.php");
-            // exit();
+            //
             $sql="INSERT INTO `order_product`(`order_id`, `user_id`) VALUES ('OD$user_id.','$user_id')";
             $stm= $pdh->query($sql);
+            header("Location: login.php");
+            exit();
             
         } else {
             echo "<script>alert('Đã xảy ra lỗi khi đăng ký');</script>";

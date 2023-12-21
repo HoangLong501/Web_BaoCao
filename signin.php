@@ -9,20 +9,20 @@
 </head>
 <style>
   .divider:after,
-.divider:before {
-content: "";
-flex: 1;
-height: 1px;
-background: #eee;
-}
-.h-custom {
-height: calc(100% - 73px);
-}
-@media (max-width: 450px) {
-.h-custom {
-height: 100%;
-}
-}
+  .divider:before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
+  }
+  .h-custom {
+  height: calc(100% - 73px);
+  }
+  @media (max-width: 450px) {
+  .h-custom {
+  height: 100%;
+  }
+  }
 
 </style>
 <body>
@@ -51,22 +51,36 @@ if(isset($_POST['btnLogin'])) {
     $username = $_POST['name'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM user WHERE user_name = :username AND password = :password";
-    $stmt = $pdh->prepare($sql);
-    $stmt->execute(['username' => $username, 'password' => $password]);
-    $user = $stmt->fetch(PDO::FETCH_NUM);
-    
-    if ($user) {
+    $sql = "SELECT * FROM user WHERE user_name = '$username' AND password = '$password' and is_admin =1;";
+    $stm = $pdh->query($sql);
+    $rows = $stm->fetchAll(PDO::FETCH_NUM);
+    if(sizeof($rows)>0){
+      echo "<script>alert('Đăng nhập thành công Admin.');</script>";
+      $_SESSION['admin']=1;
+      $_SESSION['user_id']=$rows[0][0];
+      header("Location: index.php");
+      exit();
+    }else{
+      $sql = "SELECT * FROM user WHERE user_name = :username AND password = :password";
+      $stmt = $pdh->prepare($sql);
+      $stmt->execute(['username' => $username, 'password' => $password]);
+      $user = $stmt->fetch(PDO::FETCH_NUM);
+      if ($user) {
         echo "<script>alert('Đăng nhập thành công.');</script>";
+        $_SESSION['admin']=0;
         $_SESSION['user_id']=$user[0];
         $idtemp=$_SESSION['user_id']; //nếu đăng nhập thành công -> lưu user trong session
         echo "<script>alert('$idtemp');</script>";
         header("Location: index.php");
-        exit();
-    } else {
+        exit(); 
+      } else {
         echo "<script>alert('Sai thông tin');</script>";
+        session_destroy();
+      }
+      $stmt->closeCursor();
     }
-    $stmt->closeCursor();
+
+    
 }
 ?>
 
@@ -134,7 +148,7 @@ if(isset($_POST['btnLogin'])) {
             <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="signup.php"
                 class="link-danger">Register</a></p>
           </div>
-          <input type="" name="signed" value="1" style="display:none" >
+          
 
         </form>
       </div>

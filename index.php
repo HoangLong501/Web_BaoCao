@@ -21,6 +21,51 @@
     .card {
         margin-left: 12px;
     }
+    body {
+    font-family: Arial, sans-serif;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.card-img-top {
+    width: 50%;
+}
+select {
+   
+    width: 100%;
+}
+
 </style>
 
 <script>
@@ -55,20 +100,33 @@
                 }
             });
         }
+
+        function addContentForm() {
+            // Lấy dữ liệu từ biểu mẫu
+           
+            let formData = new FormData($(".addContentForm")[0]);
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP
+            $.ajax({
+                type: "POST",
+                url: "addContent.php", // Tên tệp xử lý PHP
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(respone) {
+                    alert(respone);// Hiển thị kết quả từ server
+                }
+            });
+        }
+     
+
 </script>
-
-
-
-
-
-
 
 <body>
     <div class="header ">
         <nav class="navbar bg-body-tertiary ">
             <div class="container-fluid row">
                 <div class="home col"><a href="index.php" class="navbar-brand ">Drink Store</a></div>
-
+              
                 <form class="d-flex col-6" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
@@ -78,28 +136,46 @@
                     error_reporting(0);
 
                     session_start();
-                    if (!isset($_SESSION['user_id'])) { //nếu chưa đăng nhập -> hiện nút đăng nhập
-                        echo $_SESSION['user_id'];  
-                        echo "
-                    <div class='signin col'>
-                    <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
+                    
+                    if (isset($_SESSION['user_id']) && $_SESSION['admin']==1 ){
+                        include "config.php";
+                        $sql1="SELECT * FROM `manufacturer` WHERE 1";
+                        $stm = $pdh->query($sql1);
+                        $rows = $stm->fetchAll(PDO::FETCH_NUM);
 
-                </div>
-                
-                    ";
-                    } else {//nếu dã đăng nhập -> hiện nút giỏ hàng và đăng xuất
-                        echo $_SESSION['user_id'];  
                         echo "
-                    
                     <div class='signin col'>
-                    <a href='cart.php' class='btn btn-outline-success btnDangNhap' >Giỏ hàng</a>
+                    <button id='openFormButton' class='btn btn-outline-success' >Admin </button>
+                    <a href='signout.php' class='btn btn-outline-success btnDangNhap' >Đăng xuất</a>
+                    
+                   
+                    ";
+                    }else{
+                        if (!isset($_SESSION['user_id'])) { //nếu chưa đăng nhập -> hiện nút đăng nhập
+                           
+                           
+                            echo "
+                        <div class='signin col'>
+                        <a href='signin.php' class='btn btn-outline-success btnDangNhap' >Đăng nhập</a>
+    
                     </div>
                     
-                    <div class='signup col'>
-                    <a href='signout.php' class='btn btn-outline-success btnDangNhap' >Đăng xuất</a>
-                    </div>
-                    ";
+                        ";
+                        } else {//nếu dã đăng nhập -> hiện nút giỏ hàng và đăng xuất
+                          
+                            echo "
+                        
+                        <div class='signin col'>
+                        <a href='cart.php' class='btn btn-outline-success btnDangNhap' >Giỏ hàng</a>
+                        </div>
+                        
+                        <div class='signup col'>
+                        <a href='signout.php' class='btn btn-outline-success btnDangNhap' >Đăng xuất</a>
+                        </div>
+                        ";
+                        }
                     }
+                    
                     ?>
                 </div>
 
@@ -109,6 +185,77 @@
         </nav>
 
     </div>
+
+    <div id='myModal' class='modal'>
+                    <div class='modal-content'>
+                      <span class='close' id='closeFormButton'>&times;</span>
+                      
+                        <!-- Card -->
+                            <div class='card'>
+
+                            <!-- Card image -->
+                            <img class='card-img-top' src='./img/logo.jpg' alt='Card image cap'>
+
+                                <?php
+                                    include "config.php";
+                                    $sql1="SELECT * FROM `manufacturer`";
+                                    $stm = $pdh->query($sql1);
+                                    $rows = $stm->fetchAll(PDO::FETCH_NUM);
+                                    echo "
+                                    <form class='addContentForm' enctype='multipart/form-data' >
+
+                                    <div class='input-group-prepend'>
+                                    <span class='input-group-text' id='inputGroupFileAddon01'>Add an image</span>
+                                    </div>
+
+                                    <div class='custom-file'>
+                                    <input type='file' name='inputFile' class='custom-file-input'  accept='.jpg, .png'
+                                    aria-describedby='inputGroupFileAddon01'>
+
+                                    
+                                    </div>
+                            
+                                    <!-- Card content -->
+                                    <div class='card-body'>
+
+                                    <!-- Title -->
+                                    <input type='text' name='drinkNameADM' class='form-control mb-4' placeholder='DRINK NAME'>
+                                    <input type='text' name='drinkIDADM' class='form-control mb-4' placeholder='DRINK ID'>  
+                                    <!-- Text -->
+                                    <input type='text' name='drinkPriceADM' class='form-control mb-4' placeholder='PRICE'> 
+                                    <select name='selectManu' class='browser-default custom-select'>
+                                
+                                    ";
+                                    foreach ($rows as $row) {
+                                        echo "
+                                        <option selected value='$row[0]'>$row[1]</option>
+                                        ";
+
+                                    }
+                                    echo "
+                                    </select>
+                                    <button type='button'onclick='addContentForm()' class='btn btn-primary'>Thêm</button>
+                                    </div>
+                                    </form>
+                                    ";
+                                ?>
+                                
+
+                                <!-- Button -->
+                               
+                            
+                           
+                            
+
+                            </div>
+                        <!-- Card -->
+
+
+
+                    </div>
+                    </div>
+                    </div>
+
 
 
 
@@ -166,7 +313,7 @@
                                 <div class='card-body'>
                                     <h5 class='card-title'>$title</h5>
                                     <p class='card-text'>Giá bán $price $</p>
-                                    <button type='button' onclick='submitForm($id)'class='btn btn-primary btnNav' >Thêm vào giỏ hàng</button>
+                                    <button type='button' onclick='submitForm(\"$id\")'class='btn btn-primary btnNav' >Thêm vào giỏ hàng</button>
                                 </div>
                             </form>
                         </div>
@@ -188,7 +335,29 @@
 
 
 </body>
+<script>
+       // Lấy các phần tử DOM
+       var modal = document.getElementById('myModal');
+    var btnOpenForm = document.getElementById('openFormButton');
+    var btnCloseForm = document.getElementById('closeFormButton');
 
+    // Khi nút mở form được nhấn, hiển thị form
+    btnOpenForm.onclick = function() {
+        modal.style.display = 'block';
+    };
+
+    // Khi nút đóng form được nhấn, ẩn form
+    btnCloseForm.onclick = function() {
+        modal.style.display = 'none';
+    };
+
+    // Khi click ra ngoài form, ẩn form
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="scripts.js"></script>
