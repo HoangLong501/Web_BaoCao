@@ -40,7 +40,27 @@
                 }
             });
         }
-    </script>
+
+        function submitUpdateCart(id) {
+            // Lấy dữ liệu từ biểu mẫu
+            let tem ='.updateQuantity'+'_'+id;
+            var updateQuantity =document.querySelector(tem).value;
+            var formData = $(".formUpdate").serialize();
+          
+            formData += "&updateID=" + id ;
+            formData += "&updateQuantity=" + updateQuantity ;
+            // Sử dụng Ajax để gửi yêu cầu đến server-side PHP            
+            $.ajax({
+                type: "GET",
+                url: "removeCart.php", // Tên tệp xử lý PHP
+                data: formData,
+                success: function(respone) {
+                    alert(respone); // Hiển thị kết quả từ server
+                    location.reload();
+                }
+            });
+        }
+</script>
 <body>
 <?php
 
@@ -99,6 +119,7 @@
                     foreach($rows as $row)
                     {
                         $id=$row->drink_id;
+                        $quantity=$row->quantity;
                         echo "
                         
                         <div class='card mb-4'>
@@ -118,7 +139,7 @@
               <div class='col-md-2 d-flex justify-content-center'>
                 <div>
                   <p class='small text-muted mb-4 pb-2'>Quantity</p>
-                  <p class='lead fw-normal mb-0'>$row->quantity</p>
+                  <input min='1' value='$row->quantity' max='10' type='number'class='form-control updateQuantity_$id' />
                 </div>
               </div>
               <div class='col-md-2 d-flex justify-content-center'>
@@ -134,15 +155,20 @@
                 </div>
               </div>
               <div class='col-md-2 d-flex justify-content-center'>
-                <div>
+                    <form class='formUpdate'>
+                    
+                    <button type='button' onclick='submitUpdateCart($id)'class='btn'><i class='fa-regular fa-pen-to-square'></i></button>
+                    </form>
+
                     <form class='form'>
                         <button type='button' onclick='submitRemoveCart($id)'class='btn'><i class='fa-regular fa-trash-can'></i></button>
-                        </div>
+                        
                     </form>
-                    
-                </div>
+              </div>
+               
+                
               
-            </div>
+                </div>
 
           </div>
         </div>

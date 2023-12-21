@@ -18,8 +18,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Xóa thất bại";
     }
     // Phản hồi về trang gửi yêu cầu Ajax
-} else {
-    // Nếu không phải là yêu cầu POST, có thể thực hiện các xử lý khác ở đây (nếu cần)
-    echo"Đã gặp lỗi khi đang xóa";
-}
+} else if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    include "config.php";
+   $updateID = $_GET['updateID'];
+    $updateQuantity=$_GET['updateQuantity'];
+    $sql1="UPDATE `order_detail` SET `quantity`='$updateQuantity' WHERE drink_id='$updateID'";
+    $stm = $pdh->query($sql1);
+    echo "Cập nhật thành công";
+}else "Lỗi truy cập server";
 ?>

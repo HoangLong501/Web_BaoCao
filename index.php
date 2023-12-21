@@ -145,7 +145,7 @@ select {
 
                         echo "
                     <div class='signin col'>
-                    <button id='openFormButton' class='btn btn-outline-success' >Admin </button>
+                    <button id='openFormButton' class='btn btn-outline-success' >Add product</button>
                     <a href='signout.php' class='btn btn-outline-success btnDangNhap' >Đăng xuất</a>
                     
                    
@@ -268,12 +268,8 @@ select {
                 $stm = $pdh->query($sql);
                 $rows12 = $stm->fetchAll(PDO::FETCH_OBJ);
                 foreach ($rows12 as $row4) {
-
                 $idSB=$row4->manu_id;
-               
                 echo "
-
-
                 <li class='nav-item'>
                     <form class='navForm'>
                     <input name='testID' id='navIP' type='hidden' value='$idSB'>
@@ -282,9 +278,6 @@ select {
                 </li>
                 ";
                 }
-                
-                
-
                 ?>
             </ul>
         </div>
@@ -298,7 +291,31 @@ select {
                 <?php
                 include "config.php";
                 session_start();
-                $sql = "select * from drink ";
+                    
+                if (isset($_SESSION['user_id']) && $_SESSION['admin']==1 ){
+                    $sql = "select * from drink ";
+                $stm = $pdh->query($sql);
+                $rows = $stm->fetchAll(PDO::FETCH_OBJ);
+                foreach ($rows as $row) {
+                    $title = $row->drink_name;
+                    $id = $row->drink_id;
+                    $price = $row->price;
+
+                    echo "
+                        <div class='card col-3' style='width: 18rem;'>
+                            <form class='formCart'   >
+                                <img src='./img_product/$row->img' class='card-img-top' alt='...'>
+                                <div class='card-body'>
+                                    <h5 class='card-title'>$title</h5>
+                                    <p class='card-text'>Giá bán $price $</p>
+                                    <button type='button' onclick='submitForm(\"$id\")'class='btn btn-primary btnNav' >Xóa giỏ hàng</button>
+                                </div>
+                            </form>
+                        </div>
+                        ";
+                }
+                }else{
+                    $sql = "select * from drink ";
                 $stm = $pdh->query($sql);
                 $rows = $stm->fetchAll(PDO::FETCH_OBJ);
                 foreach ($rows as $row) {
@@ -319,6 +336,8 @@ select {
                         </div>
                         ";
                 }
+                }
+                
 
                 ?>
 
